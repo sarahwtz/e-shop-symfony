@@ -43,4 +43,14 @@ final class CategoryController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('admin/category/{id}', name: 'app_category_show')]
+    public function show(Category $category):Response
+    {
+            return  $this->render('admin/category/show.html.twig', [
+                'category' => $category,
+            ]);
+
+    }
+
 }
