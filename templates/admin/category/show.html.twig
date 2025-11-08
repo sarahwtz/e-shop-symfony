@@ -17,12 +17,15 @@
         Edit Category
     </a>
 
-    <form action="{{ path('app_category_delete', {'id': category.id}) }}" method="POST">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
-        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105 duration-300">
-            Delete
-        </button>
-    </form>
+    <form id="delete-form-{{ category.id }}" action="{{ path('app_category_delete', {'id': category.id}) }}" method="POST">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+    <button type="button"
+            onclick="confirmDelete({{ category.id }})"
+            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105 duration-300">
+        Delete
+    </button>
+</form>
+
 
 
 
