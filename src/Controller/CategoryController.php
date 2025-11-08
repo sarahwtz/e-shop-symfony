@@ -54,7 +54,7 @@ final class CategoryController extends AbstractController
 
     }
 
-     #[Route('admin/category/edit/{id}', name: 'app_category_edit')]
+    #[Route('admin/category/edit/{id}', name: 'app_category_edit')]
     public function edit(EntityManagerInterface $em, Request $request, Category $category):Response
     {
         $form = $this->createForm(CategoryType::class, $category);   
@@ -75,5 +75,24 @@ final class CategoryController extends AbstractController
             ]);
 
     }
+
+   #[Route('admin/category/delete/{id}', name: 'app_category_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $em, Category $category): Response
+    {
+        // Validar CSRF token
+        $submittedToken = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete' . $category->getId(), $submittedToken)) {
+            $em->remove($category);
+            $em->flush();
+
+            $this->addFlash('success', 'Category deleted successfully!');
+        } else {
+            $this->addFlash('error', 'Invalid CSRF token. Category was not deleted.');
+        }
+
+        return $this->redirectToRoute('app_category');
+}
+
 
 }
