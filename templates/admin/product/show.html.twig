@@ -17,7 +17,7 @@
             Edit Product
         </a>
 
-        <form action="" method="POST">
+        <form id="delete-form-{{product.id}}" action="{{path('app_product_delete', {'id':product.id})}}" method="POST">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
             <button type="button"
                     onclick="confirmDelete({{ product.id }})"

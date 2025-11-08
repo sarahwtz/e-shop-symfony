@@ -93,5 +93,31 @@ final class ProductController extends AbstractController
     }
 
 
+
+
+    #[Route('/admin/product/delete/{id}', name: 'app_product_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $em, Product $product, UploaderHelper $uploaderHelper): Response
+    {
+        
+        $submittedToken = $request->request->get('_token');
+
+        if (!$this->isCsrfTokenValid('delete'.$product->getId(), $submittedToken)) {
+            $this->addFlash('error', 'Invalid CSRF token.');
+            return $this->redirectToRoute('app_product');
+        }
+
+        $thumbnail = $product->getImage();
+        if ($thumbnail) {
+            $uploaderHelper->deleteProductImage($thumbnail);
+        }
+
     
+        $em->remove($product);
+        $em->flush();
+
+        $this->addFlash('success', 'Product deleted successfully!');
+
+        return $this->redirectToRoute('app_product');
+    }
+
 }
