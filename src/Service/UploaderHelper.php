@@ -34,4 +34,14 @@ class UploaderHelper
     {
         return $this->uploadsPath.'/product_images';
     }
+    
+
+    public function deleteProductImage(string $filename): void
+    {
+        $filePath = $this->getTargetDirectory().'/'.$filename;
+
+        if(file_exists($filePath)){
+            unlink($filePath);
+        }
+    }
 }

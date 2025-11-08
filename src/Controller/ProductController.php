@@ -19,7 +19,7 @@ final class ProductController extends AbstractController
     {
         $products = $productRepository->findAll();
         return $this->render('admin/product/index.html.twig', [
-           'products' => $products,
+            'products' => $products,
         ]);
     }
 
@@ -53,12 +53,45 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/admin/product/{id}', name: 'app_product_show')]
-    public function show(Product $product):Response
+    public function show(Product $product): Response
     {
-
-    return $this->render('admin/product/show.html.twig', [
-        'product' => $product,
-     
+        return $this->render('admin/product/show.html.twig', [
+            'product' => $product,
         ]);
     }
+
+    #[Route('/admin/product/edit/{id}', name: 'app_product_edit')]
+    public function edit(EntityManagerInterface $em, Request $request, Product $product, UploaderHelper $uploaderHelper): Response
+    {
+        $originalThumbnail = $product->getImage();
+
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form['image']->getData();
+
+            if ($uploadedFile) {
+                if ($originalThumbnail) {
+                    $uploaderHelper->deleteProductImage($originalThumbnail);
+                }
+
+                $newFilename = $uploaderHelper->uploadProductImage($uploadedFile);
+                $product->setImage($newFilename);
+            }
+
+            $em->flush();
+            $this->addFlash('success', 'Product updated successfully!');
+
+            return $this->redirectToRoute('app_product');
+        }
+
+        return $this->render('admin/product/new.html.twig', [
+            'form' => $form->createView(),
+            'isEdit' => true,
+        ]);
+    }
+
+
+    
 }
