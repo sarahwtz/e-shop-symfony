@@ -51,4 +51,14 @@ final class ProductController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/admin/product/{id}', name: 'app_product_show')]
+    public function show(Product $product):Response
+    {
+
+    return $this->render('admin/product/show.html.twig', [
+        'product' => $product,
+     
+        ]);
+    }
 }
