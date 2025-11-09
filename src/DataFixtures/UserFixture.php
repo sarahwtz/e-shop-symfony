@@ -21,22 +21,26 @@ class UserFixture extends Fixture
     {
         $faker = Factory::create();
 
-      
+        $adminPassword = $_ENV['ADMIN_PASSWORD'] ?? 'devAdminPass';
+        $userPassword  = $_ENV['USER_PASSWORD']  ?? 'devUserPass';
+
+       
         $admin = new User();
         $admin->setEmail('admin@example.com');
         $admin->setFullName($faker->name());
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setPassword(
-            $this->passwordHasher->hashPassword($admin, 'adminpass')
+            $this->passwordHasher->hashPassword($admin, $adminPassword)
         );
         $manager->persist($admin);
 
+        
         $user = new User();
         $user->setEmail('user@example.com');
         $user->setFullName($faker->name());
         $user->setRoles(['ROLE_USER']);
         $user->setPassword(
-            $this->passwordHasher->hashPassword($user, 'userpass')
+            $this->passwordHasher->hashPassword($user, $userPassword)
         );
         $manager->persist($user);
 
