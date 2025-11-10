@@ -18,7 +18,7 @@
                                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.293 2.293a1 1 0 001.414 1.414L7 13zm0 0L5.4 5M16 21a2 2 0 100-4 2 2 0 000 4zm-8 0a2 2 0 100-4 2 2 0 000 4z"/>
                         </svg>
                         <span class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                            0
+                            <span id="cart-count"> {{ count ?? 0 }} </span>
                         </span>
                     </a>
                     <a href="{{path('app_customer')}}" class="text-sm px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition">Dashboard</a>
