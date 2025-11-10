@@ -49,6 +49,7 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/new.html.twig', [
             'form' => $form->createView(),
+            'isEdit' => false, 
         ]);
     }
 
@@ -75,7 +76,6 @@ final class ProductController extends AbstractController
                 if ($originalThumbnail) {
                     $uploaderHelper->deleteProductImage($originalThumbnail);
                 }
-
                 $newFilename = $uploaderHelper->uploadProductImage($uploadedFile);
                 $product->setImage($newFilename);
             }
@@ -88,17 +88,13 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/new.html.twig', [
             'form' => $form->createView(),
-            'isEdit' => true,
+            'isEdit' => true, 
         ]);
     }
-
-
-
 
     #[Route('/admin/product/delete/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, EntityManagerInterface $em, Product $product, UploaderHelper $uploaderHelper): Response
     {
-        
         $submittedToken = $request->request->get('_token');
 
         if (!$this->isCsrfTokenValid('delete'.$product->getId(), $submittedToken)) {
@@ -106,12 +102,10 @@ final class ProductController extends AbstractController
             return $this->redirectToRoute('app_product');
         }
 
-        $thumbnail = $product->getImage();
-        if ($thumbnail) {
-            $uploaderHelper->deleteProductImage($thumbnail);
+        if ($product->getImage()) {
+            $uploaderHelper->deleteProductImage($product->getImage());
         }
 
-    
         $em->remove($product);
         $em->flush();
 
@@ -119,5 +113,4 @@ final class ProductController extends AbstractController
 
         return $this->redirectToRoute('app_product');
     }
-
 }
