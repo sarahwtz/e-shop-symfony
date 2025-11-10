@@ -3,5 +3,22 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<h1>Home Controller</h1>
+ <div class="container mx-auto p-4">
+    <form method="get" action="{{path('app_home')}}" class="mb-4 relative">
+        <input type="text" name="q" placeholder="Search product..." value=""
+            class="w-full p-2 border border-gray-300 rounded bg-white"
+        >
+        <button type="submit" class=" text-gray-500 font-medium  hover:text-blue-600 transition absolute right-0 top-0 mt-2 mr-2">
+        Go!
+        </button>
+    </form>
+
+    <div class="mb-4">
+        <h3>Filter by Category</h3>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ls:grid-cols-4 gap-4">
+    </div>
+
+</div>
 {% endblock %}
