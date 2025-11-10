@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\Product;
+
 
 final class HomeController extends AbstractController
 {
@@ -23,8 +25,22 @@ final class HomeController extends AbstractController
 
 
         return $this->render('home/index.html.twig', [
-            'categories' => $categories,
-            'products' => $products
-        ]);
+        'categories' => $categories,
+        'products' => $products,
+        'query' => $query
+]);
+
     }
+
+
+     #[Route('/user/product/{id}', name: 'user_product_show')]
+     public function show(Product $product): Response
+    {
+       return $this->render('home/show.html.twig',[
+        'product' => $product
+
+       ]);
+    }
+
+
 }
