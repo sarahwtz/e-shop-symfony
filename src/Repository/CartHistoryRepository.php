@@ -16,6 +16,14 @@ class CartHistoryRepository extends ServiceEntityRepository
         parent::__construct($registry, CartHistory::class);
     }
 
+
+    public function save(CartHistory $cartHistory):void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($cartHistory);
+        $entityManager->flush();
+    }
+
     //    /**
     //     * @return CartHistory[] Returns an array of CartHistory objects
     //     */

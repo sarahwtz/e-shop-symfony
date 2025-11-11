@@ -209,7 +209,7 @@ class Order
     {
         if (!$this->cartHistories->contains($cartHistory)) {
             $this->cartHistories->add($cartHistory);
-            $cartHistory->setProductOrder($this);
+            $cartHistory->setOrder($this);
         }
 
         return $this;
@@ -219,8 +219,8 @@ class Order
     {
         if ($this->cartHistories->removeElement($cartHistory)) {
             // set the owning side to null (unless already changed)
-            if ($cartHistory->getProductOrder() === $this) {
-                $cartHistory->setProductOrder(null);
+            if ($cartHistory->getOrder() === $this) {
+                $cartHistory->setOrder(null);
             }
         }
 
