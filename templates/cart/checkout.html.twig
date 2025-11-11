@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block body %}
+
+    <div class="min-h-screen bg-gray-100 py-12 px-4">
+
+        <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6"> Your Cart - Checkout </h2>
+
+             {% if items is empty %}
+        <p class="text-gray-500">Your Cart ist empty.</p>
+
+        {% else %}
+             <div class="space-y-6">
+            {% for item in items %}
+                <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800">{{item.product.name}}</h3>
+                    <p class="text-sm text-gray-600">Quantity: <span> {{item.quantity}} </span> </p>
+                    <p class="text-sm text-gray-600">
+                    Subtotal: <span class="font-medium text-gray-800">{{item.subtotal | number_format(2)}} € </span>
+                    </p>
+                </div>
+
+            {% endfor %}
+
+                <div class="border-t  border-gray-100 pt-4 space-y-2">
+                    <p class="text-base font-medium text-gray-700">
+                    Total items:<span class="font-bold"> {{count}} </span>
+                     </p>
+                     <p class="text-base font-medium text-gray-700">
+                     Total price: <span class=" text-green-600 font-bold text-lg">{{ tt | number_format(2)}} €</span>
+                     </p>
+                </div>
+            </div>
+
+            <form action="{{path('cart_checkout')}}" method="POST" class="space-y-5">
+                <div>
+                    <label class="block mb-2 text-gray-700 font-medium">Payment Method: </label>
+
+                     <label class="flex items-center mb-2">
+                        <input type="radio" name="payment_method" value="paypal" checked class="mr-2">
+                        Pay with PayPal
+                     </label>
+
+                     <label class="flex items-center mb-2">
+                        <input type="radio" name="payment_method" value="stripe" checked class="mr-2">
+                        Pay with Credit
+                     </label>
+                     
+                </div>
+
+                <button type="submit" id="checkout-button"
+                    class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition"
+                >
+                Proceed to Checkout
+                </button>
+
+            </form>
+
+
+        {% endif %}  
+    </div>
+ </div>
+
+ <script>
+document.getElementById('checkout-button').addEventListener('click', function(event) {
+    event.preventDefault(); 
+
+    fetch('/cart/stripe/checkout/', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          
+            window.location.href = data.url;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error initiating the checkout process.');
+        });
+});
+</script>
+
+{% endblock %}
