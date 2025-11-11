@@ -23,7 +23,7 @@ class CartService
         $this->session->set('cart', $cart);
     }
 
-   public function getDetailedItems(): array
+    public function getDetailedItems(): array
     {
         $items = $this->session->get('cart', []);
         $detailedItems = [];
@@ -31,7 +31,7 @@ class CartService
         foreach ($items as $productId => $quantity) {
             $product = $this->productRepo->find($productId);
             if (!$product) {
-                continue; // ignora IDs inválidos
+                continue;
             }
 
             $subtotal = $product->getPrice() * $quantity;
@@ -45,16 +45,34 @@ class CartService
         return $detailedItems;
     }
 
-
-
     public function getTotal(): float
     {
         return array_sum(array_column($this->getDetailedItems(), 'subtotal'));
     }
 
-
-     public function getCount(): int
+    public function getCount(): int
     {
         return array_sum($this->session->get('cart', []));
+    }
+
+   public function update(int $id, int $quantity): void
+    {
+        $cart = $this->session->get('cart', []);
+
+        if ($quantity <= 0) {
+            unset($cart[$id]); 
+        } else {
+            $cart[$id] = $quantity;
+        }
+
+        $this->session->set('cart', $cart);
+    }
+
+
+    public function remove(int $id): void
+    {
+        $cart = $this->session->get('cart', []);
+        unset($cart[$id]);
+        $this->session->set('cart', $cart);
     }
 }

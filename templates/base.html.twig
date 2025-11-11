@@ -16,5 +16,48 @@
         {% block body %}{% endblock %}
         {% include('partials/_footer.html.twig')%}
 
+            <script>
+                function updateQuantity(id, change) {
+                const qtyElement = document.getElementById('qty-' + id);
+                const currentQty = parseInt(qtyElement.innerText);
+                const newQty = currentQty + change;
+
+                fetch('/cart/update/' + id, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'quantity=' + newQty
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (newQty <= 0) {
+                            document.getElementById('item-' + id).remove();
+                        } else {
+                            qtyElement.innerText = newQty;
+                            location.reload();
+                        }
+                        document.getElementById('cart-count').innerText = data.count;
+                        document.getElementById('cart-total').innerText = data.total.toFixed(2);
+                    }
+                });
+            }
+
+                function removeItem(id) {
+                fetch('/cart/remove/' + id)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('item-' + id).remove();
+                        document.getElementById('cart-count').innerText = data.count;
+                        document.getElementById('cart-total').innerText = data.total.toFixed(2);
+                    }
+                });
+            }
+        </script>
+
+
     </body>
 </html>
