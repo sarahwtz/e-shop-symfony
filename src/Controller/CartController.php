@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
-
 final class CartController extends AbstractController
 {
     #[Route('/cart', name: 'cart_view')]
@@ -74,7 +73,7 @@ final class CartController extends AbstractController
         ]);
     }
 
-    #[Route('/cart/checkout', name: 'cart_checkout', methods: ['GET','POST'])]
+    #[Route('/cart/checkout', name: 'cart_checkout', methods: ['GET', 'POST'])]
     public function checkout(
         CartService $cartService,
         SessionInterface $session,
@@ -140,12 +139,12 @@ final class CartController extends AbstractController
                 'cancel_url' => $this->generateUrl('cart_view', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
         } catch (ApiErrorException $e) {
-            dd('Stripe error:' . $e->getMessage());
+            dd('Stripe error: ' . $e->getMessage());
         } catch (\Exception $e) {
             dd('General error: ' . $e->getMessage());
         }
 
-        return new JsonResponse(['url' => $session->url]);
+        return $this->redirect($session->url);
     }
 
     #[Route('/stripe/success', name: 'stripe_success')]
@@ -153,8 +152,7 @@ final class CartController extends AbstractController
         CartService $cartService,
         SessionInterface $session,
         OrderRepository $orderRepository,
-        CartHistoryRepository $cartHistoryRepo,
-        Security $security
+        CartHistoryRepository $cartHistoryRepo
     ): Response {
         $items = $cartService->getDetailedItems();
         $total = $cartService->getTotal();
@@ -165,17 +163,12 @@ final class CartController extends AbstractController
         }
 
         $orderReference = strtoupper(uniqid('ORD-'));
-
-        $user = $security->getUser();
-
-        $userName = $user && $user->getFullName() ? $user->getFullName() : 'Guest';
-        $userEmail = $user ? $user->getEmail() : 'guess@example.com';
-        $userAddress = $user && $user->getAddress() ? $user->getAddress() : 'Unknown Address';
+        $user = $this->getUser();
 
         $order = new Order();
-        $order->setUserName($userName)
-            ->setUserEmail($userEmail)
-            ->setUserAddress($userAddress)
+        $order->setUserName($user?->getFullName() ?? 'Guest')
+            ->setUserEmail($user?->getEmail() ?? 'guest@example.com')
+            ->setUserAddress($user?->getAddress() ?? 'Unknown Address')
             ->setTotal($total)
             ->setPaymentMethod('stripe')
             ->setPaymentStatus('Paid')
@@ -185,10 +178,11 @@ final class CartController extends AbstractController
         foreach ($items as $item) {
             $cartHistory = new CartHistory();
             $cartHistory->setProductName($item['product']->getName())
-                ->setProductPrice($item['product']->getPrice())
-                ->setSubTotal($item['subtotal'])
-                ->setOrderReference($orderReference)
-                ->setOrder($order);
+                        ->setProductPrice($item['product']->getPrice())
+                        ->setQuantity($item['quantity'])
+                        ->setSubTotal($item['subtotal'])
+                        ->setOrderReference($orderReference)
+                        ->setOrder($order);
 
             $cartHistoryRepo->save($cartHistory);
         }
@@ -196,7 +190,7 @@ final class CartController extends AbstractController
         $orderRepository->save($order);
         $session->remove('cart');
 
-        return $this->render('cart_confirmation.html.twig',[
+        return $this->render('confirmation.html.twig', [
             'items' => $items,
             'total' => $total,
             'order' => $order

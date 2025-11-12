@@ -16,19 +16,19 @@ class CartHistory
     #[ORM\Column(length: 255)]
     private ?string $productName = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $productPrice = null;
+    #[ORM\Column(type: 'float')]
+    private ?float $productPrice = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float')]
     private ?float $subTotal = null;
 
     #[ORM\Column(length: 255)]
     private ?string $orderReference = null;
 
-    #[ORM\ManyToOne(targetEntity:Order::class, inversedBy: 'cartHistories', cascade:['persist'])]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'cartHistories', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Order $order = null;
 
@@ -45,19 +45,17 @@ class CartHistory
     public function setProductName(string $productName): static
     {
         $this->productName = $productName;
-
         return $this;
     }
 
-    public function getProductPrice(): ?string
+    public function getProductPrice(): ?float
     {
         return $this->productPrice;
     }
 
-    public function setProductPrice(string $productPrice): static
+    public function setProductPrice(float $productPrice): static
     {
         $this->productPrice = $productPrice;
-
         return $this;
     }
 
@@ -69,7 +67,6 @@ class CartHistory
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
-
         return $this;
     }
 
@@ -81,7 +78,6 @@ class CartHistory
     public function setSubTotal(float $subTotal): static
     {
         $this->subTotal = $subTotal;
-
         return $this;
     }
 
@@ -93,7 +89,6 @@ class CartHistory
     public function setOrderReference(string $orderReference): static
     {
         $this->orderReference = $orderReference;
-
         return $this;
     }
 
@@ -105,7 +100,6 @@ class CartHistory
     public function setOrder(?Order $order): static
     {
         $this->order = $order;
-
         return $this;
     }
 }

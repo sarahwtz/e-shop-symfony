@@ -54,10 +54,11 @@
                     Total: <span class="text-green-600">€<span id="cart-total">{{total|number_format(2)}}</span></span>
                 </p>
                 <p class="txt-sm text-gray-500 mt-1">Items in cart: <span id="cart-count">{{ count }}</span><p>
-                <a href="{{path('cart_checkout')}}"
-                    class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow transition">
-                    Proceed to Checkout
-                </a>
+                    <a href="{{ path('stripe_checkout') }}"
+                        class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow transition">
+                        Proceed to Checkout
+                        </a>
+
             </div>  
         {% endif %}
     </div>
