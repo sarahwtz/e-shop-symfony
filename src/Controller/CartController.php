@@ -173,6 +173,7 @@ final class CartController extends AbstractController
             ->setPaymentMethod('stripe')
             ->setPaymentStatus('Paid')
             ->setIsPending(true)
+            ->setOrderDate(new \DateTime())
             ->setOrderReference($orderReference);
 
         foreach ($items as $item) {
