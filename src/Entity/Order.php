@@ -1,4 +1,4 @@
-<?php
+<?php  
 
 namespace App\Entity;
 
@@ -49,10 +49,15 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $orderReference = null;
 
+    // **Aqui você adiciona o campo orderDate com a anotação ORM**
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $orderDate = null;  // Campo orderDate
+
     /**
      * @var Collection<int, CartHistory>
      */
-    #[ORM\OneToMany(targetEntity: CartHistory::class, mappedBy: 'productOrder')]
+    //#[ORM\OneToMany(targetEntity: CartHistory::class, mappedBy: 'productOrder')]
+    #[ORM\OneToMany(targetEntity: CartHistory::class, mappedBy: 'order')]
     private Collection $cartHistories;
 
     public function __construct()
@@ -60,6 +65,7 @@ class Order
         $this->cartHistories = new ArrayCollection();
     }
 
+    // Métodos para acessar os dados da entidade Order
     public function getId(): ?int
     {
         return $this->id;
@@ -73,7 +79,6 @@ class Order
     public function setUserName(string $userName): static
     {
         $this->userName = $userName;
-
         return $this;
     }
 
@@ -85,7 +90,6 @@ class Order
     public function setUserEmail(string $userEmail): static
     {
         $this->userEmail = $userEmail;
-
         return $this;
     }
 
@@ -97,7 +101,6 @@ class Order
     public function setUserAddress(string $userAddress): static
     {
         $this->userAddress = $userAddress;
-
         return $this;
     }
 
@@ -109,7 +112,6 @@ class Order
     public function setTotal(float $total): static
     {
         $this->total = $total;
-
         return $this;
     }
 
@@ -121,7 +123,6 @@ class Order
     public function setPaymentMethod(string $paymentMethod): static
     {
         $this->paymentMethod = $paymentMethod;
-
         return $this;
     }
 
@@ -133,7 +134,6 @@ class Order
     public function setPaymentStatus(string $PaymentStatus): static
     {
         $this->PaymentStatus = $PaymentStatus;
-
         return $this;
     }
 
@@ -145,7 +145,6 @@ class Order
     public function setIsPending(?bool $isPending): static
     {
         $this->isPending = $isPending;
-
         return $this;
     }
 
@@ -157,7 +156,6 @@ class Order
     public function setIsShipped(?bool $isShipped): static
     {
         $this->isShipped = $isShipped;
-
         return $this;
     }
 
@@ -169,7 +167,6 @@ class Order
     public function setIsDelivered(?bool $isDelivered): static
     {
         $this->isDelivered = $isDelivered;
-
         return $this;
     }
 
@@ -181,7 +178,6 @@ class Order
     public function setIsProcessed(?bool $isProcessed): static
     {
         $this->isProcessed = $isProcessed;
-
         return $this;
     }
 
@@ -193,7 +189,19 @@ class Order
     public function setOrderReference(string $orderReference): static
     {
         $this->orderReference = $orderReference;
+        return $this;
+    }
 
+    // **Métodos para o campo orderDate**
+
+    public function getOrderDate(): ?\DateTimeInterface
+    {
+        return $this->orderDate;
+    }
+
+    public function setOrderDate(\DateTimeInterface $orderDate): static
+    {
+        $this->orderDate = $orderDate;
         return $this;
     }
 
