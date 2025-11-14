@@ -31,7 +31,7 @@
 
                     <td class="px-4 py-3">
                         {% if order.orderReference %}
-                            <a href="#"
+                            <a href="{{path('app_admin_orders_details', {'ref': order.orderReference})}}"
                                class="text-blue-600 hover:text-blue-800 underline">
                                 {{ order.orderReference }}
                             </a>

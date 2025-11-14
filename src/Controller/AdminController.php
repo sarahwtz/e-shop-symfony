@@ -110,4 +110,19 @@ final class AdminController extends AbstractController
     }
 
 
+    #[Route('/admin/orders/{ref}', name: 'app_admin_orders_details')]
+    public function viewOrder(string $ref, OrderRepository $orderRepo):Response
+    {
+        $order = $orderRepo->findOneBy(['orderReference' => $ref]);
+
+        if(!$order){
+            throw $this->createNotFoundException('Order not found');
+        }
+
+        return $this->render('admin/order/order_details.html.twig', [
+            'order' => $order
+        ]);
+    }
+
+
 }
