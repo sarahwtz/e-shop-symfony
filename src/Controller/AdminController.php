@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\CartHistoryRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
@@ -125,4 +126,13 @@ final class AdminController extends AbstractController
     }
 
 
+    #[Route('/admin/users', name: 'app_admin_users')]
+    public function users(EntityManagerInterface $em)
+    {
+        $users = $em->getRepository(User::class)->findAll();
+
+        return $this->render('admin/users/index.html.twig', [
+            'users' => $users
+        ]);
+    }
 }

@@ -1,0 +1,53 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}AdminController!{% endblock %}
+
+{% block body %}
+
+<div class="overflow-x-auto rounded-lg shadow-md bg-white">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">All Users</h1>
+
+    <table class="min-w-full table-auto border border-gray-200">
+        <thead class="bg-gray-100 text-gray-700 text-left text-sm uppercase tracking-wider">
+            <tr>
+                <th class="px-6 py-3">User_Nr</th>
+                <th class="px-6 py-3">Email</th>
+                <th class="px-6 py-3">Full Name</th>
+                <th class="px-6 py-3">Roles</th>
+                <th class="px-6 py-3  text-center">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody class="text-gray-700 text-sm divide-y divide-gray-200">
+        {% for user in users %}
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4">{{ loop.index }}</td>
+
+                <td class="px-6 py-4">{{ user.email }}</td>
+
+                <td class="px-6 py-4">
+                    {% if user.fullName %}
+                        {{ user.fullName }}
+                    {% else %}
+                        <span class="text-red-500 italic">(no name)</span>
+                    {% endif %}
+                </td>
+
+                <td class="px-6 py-4">
+                    {{ user.roles|join(', ') }}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    <a href=""
+                       class="text-blue-600 hover:text-blue-800 font-medium transition">
+                       Edit
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+{% endblock %}
