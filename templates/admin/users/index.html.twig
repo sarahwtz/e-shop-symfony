@@ -38,12 +38,18 @@
                 </td>
 
                 <td class="px-6 py-4 text-center">
-                    <a href=""
+                    <a href="{{ path('app_admin_users_edit', { id: user.id }) }}
+"
                        class="text-blue-600 hover:text-blue-800 font-medium transition">
                        Edit
                     </a>
                 </td>
             </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-gray-500 px-6 py-4">No users found.</d>
+                </tr>
+
         {% endfor %}
         </tbody>
 

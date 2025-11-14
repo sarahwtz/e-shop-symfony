@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\CartHistoryRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
+use App\Form\UserRoleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -134,5 +135,25 @@ final class AdminController extends AbstractController
         return $this->render('admin/users/index.html.twig', [
             'users' => $users
         ]);
+    }
+
+
+    #[Route('/admin/users/{id}/edit', name: 'app_admin_users_edit')]
+    public function edit(User $user, Request $request, EntityManagerInterface $em)
+    {
+       $form = $this->createForm(UserRoleType::class, $user);
+       $form->handleRequest($request);
+
+       if($form->isSubmitted() && $form->isValid()){
+            $em->flush();
+            $this->addFlash('success', 'User roles updated');
+            return $this->redirectToRoute('app_admin_users');
+       }
+
+       return $this->render('admin/users/edit.html.twig',[
+            'form' => $form->createView(),
+            'user' => $user,
+
+       ]);
     }
 }
