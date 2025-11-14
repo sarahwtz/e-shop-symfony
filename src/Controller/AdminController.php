@@ -67,4 +67,16 @@ final class AdminController extends AbstractController
 
         ]);
     }
+
+
+    #[Route('/admin/orders', name: 'app_admin_orders')]
+    public function listOrders(OrderRepository $orderRepo): Response
+    {
+        $orders = $orderRepo->findAll();
+
+        return $this->render('admin/order/orders.html.twig',[
+            'orders' => $orders,
+
+        ]);
+    }
 }
