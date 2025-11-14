@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Repository\CartHistoryRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -79,4 +81,33 @@ final class AdminController extends AbstractController
 
         ]);
     }
+
+
+    #[Route('/admin/orders/update', name: 'app_admin_orders_update')]
+    public function uploadOrdersStatus(
+        Request $request,
+        OrderRepository $orderRepo,
+        EntityManagerInterface $em
+    ): Response
+    {
+        $statuses = $request->request->all('statuses');
+
+        foreach($statuses as $orderId => $status){
+            $order = $orderRepo->find($orderId);
+            if(!$order) continue;
+
+            $order->setIsPending(isset($status['pending']));
+            $order->setIsProcessed(isset($status['processed']));
+            $order->setIsShipped(isset($status['shipped']));
+            $order->setIsDelivered(isset($status['delivered']));
+        }
+
+        $em->flush();
+
+        $this->addFlash('success', 'Order updated successfully!');
+
+        return $this->redirectToRoute('app_admin_orders');
+    }
+
+
 }
