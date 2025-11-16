@@ -16,8 +16,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface; 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+
 
 final class CartController extends AbstractController
 {
@@ -152,7 +154,8 @@ final class CartController extends AbstractController
         CartService $cartService,
         SessionInterface $session,
         OrderRepository $orderRepository,
-        CartHistoryRepository $cartHistoryRepo
+        CartHistoryRepository $cartHistoryRepo,
+        MailerInterface $mailer
     ): Response {
         $items = $cartService->getDetailedItems();
         $total = $cartService->getTotal();
@@ -190,6 +193,24 @@ final class CartController extends AbstractController
 
         $orderRepository->save($order);
         $session->remove('cart');
+
+        $userName = $user?->getFullName() ?? 'Guest';
+        $userEmail = $user?->getEmail() ?? 'guest@example.com';
+
+        $email = (new Email())
+            ->from('info@eshop.com')
+            ->to($userEmail)
+            ->subject('Order Confirmation - '.$orderReference)
+            ->html(<<<HTML
+                <p>Dear {$userName},</p>
+                <p>Thank you for your purchase! Your order reference is <strong>{$orderReference}</strong></p>
+                <p>Total: <strong>{$total}</strong></p>
+                <p>We are processing your item and will ship it soon!</p>
+                <p>Best regards,<br>Your E-Shop Team</p>
+        HTML);
+
+        $mailer->send($email);
+
 
         return $this->render('confirmation.html.twig', [
             'items' => $items,
