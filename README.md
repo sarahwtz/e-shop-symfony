@@ -50,13 +50,13 @@ The system also includes **automatic order confirmation emails** and **role-base
 ## Screenshots
 
 ### Home / Product List
-![Home / Product List](screenshots.eshop/eshop_products.png)
+![Home / Product List](screenshots.eshop_symfony/eshop_products.png)
 
 ### Admin Dashboard
-![Admin Dashboard](screenshots.eshop/admin_panel.png)
+![Admin Dashboard](screenshots.eshop_symfony/admin_panel.png)
 
 ### Customer Dashboard
-![Customer Dashboard](screenshots.eshop/customer_dashboard.png)
+![Customer Dashboard](screenshots.eshop_symfony/customer_dashboard.png)
 
 ---
 
